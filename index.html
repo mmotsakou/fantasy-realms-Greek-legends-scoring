@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Fantasy Realms: Greek Legends – Scoring</title>
+  <meta name="description" content="Unofficial score calculator for Fantasy Realms: Greek Legends. Pick your hand and your Afterlife; bonuses, penalties and endgame effects are scored automatically.">
+  <meta name="theme-color" content="#14213d">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <h1>Fantasy Realms <span>Greek Legends</span></h1>
+      <p class="subtitle">Scoring</p>
+    </div>
+    <div class="score-box" aria-live="polite">
+      <span class="score-label">Score</span>
+      <span id="total" class="score-total">0</span>
+    </div>
+    <div class="top-actions">
+      <button id="share" type="button" class="btn ghost" title="Copy a link to this hand">Share</button>
+      <button id="reset" type="button" class="btn ghost">Reset</button>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="panel" aria-labelledby="hand-title">
+      <h2 id="hand-title">Hand <span id="hand-count" class="count"></span></h2>
+      <p id="hand-warning" class="warning" hidden></p>
+      <div id="hand" class="cards"></div>
+
+      <h2 id="afterlife-title">Afterlife <span id="afterlife-count" class="count"></span></h2>
+      <div id="afterlife" class="cards"></div>
+      <p class="hint">Each card in the Afterlife (including Heroes sent there at game end) scores −10.</p>
+    </section>
+
+    <section class="panel picker" aria-labelledby="picker-title">
+      <div class="picker-head">
+        <h2 id="picker-title">Cards</h2>
+        <div class="segmented" role="radiogroup" aria-label="Add selected card to">
+          <button type="button" role="radio" data-target="hand" aria-checked="true">Add to Hand</button>
+          <button type="button" role="radio" data-target="afterlife" aria-checked="false">Add to Afterlife</button>
+        </div>
+      </div>
+      <input id="search" type="search" placeholder="Search cards or tags…" autocomplete="off">
+      <div id="picker"></div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    Unofficial fan-made calculator. Fantasy Realms is a trademark of WizKids; card texts belong to their owners.
+    Target choices left on <em>Auto</em> are picked to give you the highest score.
+  </footer>
+
+  <div id="toast" class="toast" role="status" hidden></div>
+
+  <script src="js/cards.js"></script>
+  <script src="js/engine.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

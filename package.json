@@ -1,0 +1,9 @@
+{
+  "name": "fantasy-realms-greek-legends-scoring",
+  "private": true,
+  "description": "Unofficial score calculator for Fantasy Realms: Greek Legends",
+  "scripts": {
+    "test": "node --test test/*.test.js",
+    "start": "python3 -m http.server 8000"
+  }
+}
