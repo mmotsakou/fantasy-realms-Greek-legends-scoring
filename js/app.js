@@ -28,7 +28,7 @@
 
   function load() {
     const fromHash = parseHash();
-    if (fromHash) { Object.assign(state, fromHash); history.replaceState(null, '', location.pathname); return; }
+    if (fromHash) { Object.assign(state, fromHash); try { history.replaceState(null, '', location.pathname + location.search); } catch (e) { /* ignore */ } return; }
     try {
       const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
       if (saved) Object.assign(state, { hand: valid(saved.hand), afterlife: valid(saved.afterlife), choices: saved.choices || {} });
@@ -40,21 +40,19 @@
     } catch (e) { /* storage unavailable */ }
   }
 
+  // Share links use a hash of letters, digits and hyphens only: "h" + two base-36 digits per
+  // hand card, then "-a" + the Afterlife cards (e.g. #h0a1b-a06). Target choices reset to Auto.
+  const code = (id) => CARDS.findIndex((c) => c.id === id).toString(36).padStart(2, '0');
+  const decode = (str) => valid((str.match(/[0-9a-z]{2}/g) || []).map((x) => (CARDS[parseInt(x, 36)] || {}).id));
+
   function parseHash() {
-    if (!location.hash || location.hash.length < 2) return null;
-    const p = new URLSearchParams(location.hash.slice(1));
-    if (!p.has('h') && !p.has('a')) return null;
-    let choices = {};
-    try { choices = JSON.parse(p.get('c') || '{}'); } catch (e) { choices = {}; }
-    const split = (v) => valid((v || '').split(',').filter(Boolean));
-    return { hand: split(p.get('h')), afterlife: split(p.get('a')), choices };
+    const m = /^#h([0-9a-z]*)(?:-a([0-9a-z]*))?$/.exec(location.hash || '');
+    if (!m) return null;
+    return { hand: decode(m[1] || ''), afterlife: decode(m[2] || ''), choices: {} };
   }
   function shareUrl() {
-    const p = new URLSearchParams();
-    p.set('h', state.hand.join(','));
-    p.set('a', state.afterlife.join(','));
-    if (Object.keys(state.choices).length) p.set('c', JSON.stringify(state.choices));
-    return `${location.origin}${location.pathname}#${p.toString()}`;
+    const hash = `h${state.hand.map(code).join('')}-a${state.afterlife.map(code).join('')}`;
+    return `${location.origin}${location.pathname}${location.search}#${hash}`;
   }
 
   // ── Actions ─────────────────────────────────────────────────────────────────
@@ -207,12 +205,12 @@
     renderPicker();
   }
 
-  function toast(msg) {
+  function toast(msg, ms = 2200) {
     const t = $('#toast');
     t.textContent = msg;
     t.hidden = false;
     clearTimeout(toast.timer);
-    toast.timer = setTimeout(() => { t.hidden = true; }, 2200);
+    toast.timer = setTimeout(() => { t.hidden = true; }, ms);
   }
 
   // ── Wiring ──────────────────────────────────────────────────────────────────
@@ -224,7 +222,7 @@
   $('#reset').addEventListener('click', () => { if (!state.hand.length && !state.afterlife.length) return; reset(); });
   $('#share').addEventListener('click', async () => {
     const url = shareUrl();
-    try { await navigator.clipboard.writeText(url); toast('Link copied to clipboard'); } catch (e) { prompt('Copy this link:', url); }
+    try { await navigator.clipboard.writeText(url); toast('Link copied to clipboard'); } catch (e) { toast(`Copy this link: ${url}`, 8000); }
   });
 
   load();

@@ -3,6 +3,8 @@
 An unofficial, fan-made score calculator for **Fantasy Realms: Greek Legends** (WizKids).
 Modelled on the [Fantasy Realms scoring app](https://fantasy-realms.github.io/) for the original game.
 
+Live version: https://claude.ai/artifact/HYYxSV3oZzLehaAyS51RVT
+
 Pick the cards in your hand and in your Afterlife. The app scores every bonus, penalty, CLEAR, ADD and
 ENDGAME effect, including Heroes sent to the Afterlife by Monsters. Targets such as Moly, Athena, Chiron,
 Herakles or the Helm of Darkness default to **Auto**, which picks the option that gives the best score.
